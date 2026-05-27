@@ -84,36 +84,21 @@ export default function DogChatPage() {
     setErrorMsg(null)
 
     try {
-      const emotionRes = await fetch("/api/dog-emotion", {
+      const res = await fetch("/api/dog-emotion", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image: dataUrl }),
       })
-      const emotionData = await emotionRes.json()
+      const data = await res.json()
 
-      if (!emotionRes.ok || emotionData.error) {
-        setErrorMsg(emotionData.error ?? "감정 분석에 실패했습니다.")
+      if (!res.ok || data.error) {
+        setErrorMsg(data.error ?? "분석에 실패했습니다.")
         setPhase("error")
         return
       }
 
-      setEmotion({ label: emotionData.label, score: emotionData.score })
-
-      setPhase("chatting")
-      const chatRes = await fetch("/api/dog-chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ emotion: emotionData.label }),
-      })
-      const chatData = await chatRes.json()
-
-      if (!chatRes.ok || chatData.error) {
-        setErrorMsg(chatData.error ?? "대화 생성에 실패했습니다.")
-        setPhase("error")
-        return
-      }
-
-      setDialogue(chatData.dialogue)
+      setEmotion({ label: data.emotion, score: data.score })
+      setDialogue(data.dialogue)
       setPhase("done")
     } catch {
       setErrorMsg("네트워크 오류가 발생했습니다.")
