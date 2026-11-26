@@ -307,6 +307,14 @@ function buildTrayMenu() {
         ["photo", "📸 사진 찍기"],
         ["bath", "🛁 목욕하기"],
         ["birthday", "🎂 생일 축하"],
+        ["butterfly", "🦋 나비 잡기"],
+        ["snow", "❄️ 눈 내리기"],
+        ["rain", "🌧 비 내리기"],
+        ["star", "🌠 별똥별"],
+        ["followme", "🐾 따라와 (10초)"],
+        ["tag", "🏃 잡기 놀이"],
+        ["drink", "💧 물 마시기"],
+        ["doorbell", "📦 딩동! 택배"],
       ].map(([t, label]) => ({ label, click: () => sendCommand(`trick:${t}`) })),
     },
     { label: "🎾 공 던져 주기", click: () => sendCommand("ball") },
@@ -477,6 +485,16 @@ async function runSmokeTest() {
     ["42-photo", "window.dispatchChat('사진 찍자')", 250],
     ["43-bath", "window.dispatchChat('목욕하자')", 1200],
     ["44-birthday", "window.dispatchChat('생일 축하해')", 700],
+    ["45-name", "window.dispatchChat('내 이름은 민지야')", 400],
+    ["46-call", "window.__callOwner()", 400],
+    ["47-butterfly", "window.dispatchChat('나비다!')", 2500],
+    ["48-snow", "window.dispatchChat('눈 와')", 2200],
+    ["49-rain", "window.dispatchChat('비 와')", 900],
+    ["50-star", "window.dispatchChat('별똥별')", 600],
+    ["51-followme", "S.mouseX = 1100; S.mouseY = 700; window.dispatchChat('따라와')", 1500],
+    ["52-tag", "S.mouseX = S.x + 60; S.mouseY = 700; window.dispatchChat('잡아봐')", 1200],
+    ["53-drink", "window.dispatchChat('물 마셔')", 500],
+    ["54-doorbell", "window.dispatchChat('딩동!')", 2600],
   ]
   for (const [label, code, ms] of steps) {
     if (code) await js(code)
@@ -526,6 +544,13 @@ app.whenReady().then(() => {
       })
     }
     update({ welcomed: true })
+  }
+  // First time: once 뽀식이 has landed, open the chat so it can ask the owner's name.
+  if (!settings.ownerName && !settings.askedName && !SMOKE_DIR) {
+    setTimeout(() => {
+      update({ askedName: true })
+      openChat()
+    }, 6000)
   }
   if (SMOKE_DIR) petWin.webContents.once("did-finish-load", runSmokeTest)
 })

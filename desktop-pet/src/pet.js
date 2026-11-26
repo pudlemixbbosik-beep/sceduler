@@ -32,7 +32,7 @@ const POSE = {
   walk: "walk", run: "run", fetch: "run", spin: "run", chase: "run", nap: "sleep", sit: "sit", sleep: "sleep", jump: "jump",
   bow: "bow", paw: "paw", eat: "eat",
   // tricks made from existing pictures
-  shake: "front", sniff: "walk", hop: "jump", roll: "belly", doze: "sit", stand: "stand", howl: "front", think: "sit",
+  shake: "front", sniff: "walk", hop: "jump", roll: "belly", doze: "sit", stand: "stand", howl: "front", think: "sit", drink: "eat",
 }
 // Actions that move the dog across the floor, and how fast (px per second).
 const SPEED = { walk: 75, sniff: 40, hop: 170, roll: 150 }
@@ -94,55 +94,75 @@ const SIZES = { small: 110, medium: 150, large: 200 }
 const GRAVITY = 2600
 
 const LINES = {
-  idle: (n) => ["왈!", "놀아줘~", "주인님 뭐 해?", `${n} 심심해~`, "나 여기 있어요!"],
-  walk: () => ["킁킁… 무슨 냄새지?", "산책 좋아~", "어디 가볼까?", "총총총~"],
-  run: () => ["우다다다!", "달려라~!"],
-  jump: () => ["왈왈!", "신난다!", "점프!"],
-  spin: () => ["빙글빙글~", "꼬리 잡기!"],
-  wag: () => ["꼬리 살랑살랑~", "헤헤", "기분 좋아!"],
-  sit: () => ["얌전히 앉았어요!", "착하지?", "주인님 구경 중~"],
-  sleep: () => ["졸려… zzz", "잠깐 낮잠…", "새근새근…"],
-  pet: (n) => ["헤헤 좋아!", "쓰담쓰담 더 해줘!", `${n} 기분 최고!`, "주인님 최고!"],
-  hover: () => ["헤헤 간지러워~", "킁킁, 주인님 손이다!", "쓰담쓰담 해줄 거야?"],
-  drag: () => ["으앗! 높다~", "날 어디로 데려가?", "내려줘~ 멍!"],
-  land: () => ["휴~ 무사 착지!", "다시 해줘!", "멍! 착지 성공!"],
-  wake: () => ["으응… 깼다!", "더 자고 싶은데…", "주인님이다!"],
-  come: () => ["왔어요! 불렀어요?", "주인님~ 나 왔어!", "부르셨나요? 멍!"],
-  bow: () => ["놀자 놀자!", "기지개~ 쭈욱!", "같이 놀아요!"],
-  paw: () => ["손! 여기요~", "악수해요!"],
-  bang: () => ["으악! 당했다… 꼴깍", "빵! …(죽은 척 중)", "윽… 나 죽었어요… (실눈)"],
-  shy: () => ["부끄부끄~", "아잉 몰라요~ (얼굴 가림)", "보지 마세요… 부끄러워!"],
-  highfive: () => ["하이파이브! 짝!", "손바닥 짝! 왈!", "우리 최고!"],
-  beg: () => ["주세요~ 주세요~", "간식 하나만요… 네?", "두 발로 섰어요! 칭찬해 주세요!"],
-  belly: () => ["배 쓰담쓰담 해주세요~", "뒹굴뒹굴~ 기분 좋다!", "배 만져도 돼요! 헤헤"],
-  yawn: () => ["하아암~ 졸려…", "하품 나와요~", "아함… 조금 졸리다"],
-  zoomies: () => ["우다다다다!!", "갑자기 신난다!!", "달려라 뽀식이!!"],
-  chase: () => ["꼬리 잡을 거야!", "내 꼬리 어디 갔지?", "거기 서! 꼬리야!"],
-  peek: () => ["빼꼼!", "나 찾아봐라~", "여기 있지롱!"],
-  follow: () => ["주인님 어디 가요~", "같이 가요!", "어? 주인님 손이다!"],
-  shake: () => ["부르르르~!", "몸 털기! 털털털~", "시원하다~!"],
-  sniff: () => ["킁킁… 무슨 냄새지?", "킁킁킁… 간식 냄새?", "여기 뭐가 있나?"],
-  hop: () => ["깡충깡충~", "토끼처럼 깡충!", "신난다 깡충!"],
-  roll: () => ["데굴데굴~", "굴러간다~!", "데굴데굴 데굴~"],
-  dance: () => ["♪ 뽀식이 댄스 타임! ♪", "♪ 둠칫둠칫 ♪", "♪ 신나는 춤! ♪"],
-  wave: () => ["안녕~! 안녕~!", "주인님 안녕~!", "반가워요~!"],
-  doze: () => ["꾸벅… 꾸벅…", "졸려… 꾸벅…", "음냐음냐…"],
-  squat: () => ["운동 시작! 하나!", "튼튼해질 거예요! 하나!", "체조 시간! 하나!"],
-  yay: () => ["야호!! 신난다!!", "최고다~!!", "기분 최고!!"],
-  think: () => ["음… 간식 생각 중…", "음… 뭐 하고 놀까?", "흠… 주인님 생각 중…"],
-  kiss: () => ["쪽! 뽀뽀~ 💕", "쪽쪽! 사랑해요~", "뽀뽀 발사! 쪽!"],
-  surprise: () => ["왈?! 깜짝이야!", "헉! 뭐야 뭐야?!", "깜짝 놀랐잖아요!"],
-  stay: () => ["기다려… 꾹 참는 중…", "참을 수 있어… 기다려…"],
-  howl: () => ["아우우우~~ 🎶", "아우~ 뽀식이 노래 들어볼래요?", "랄라~ 아우우~"],
-  gift: () => ["선물이다?! 두근두근!", "뭐가 들었을까?!"],
-  bubbles: () => ["비눗방울이다! 잡을 거야!", "몽글몽글~ 잡아라!"],
-  photo: () => ["찰칵! 예쁘게 나왔어요?", "브이~! 찰칵!"],
-  bath: () => ["목욕…? 거품 보글보글~", "보글보글~ 목욕 시간!"],
-  birthday: () => ["생일 축하해요! 🎉", "축하 축하~! 🎂"],
-  rub: () => ["헤헤 간지러워~ 더 해줘!", "아~ 거기 거기!", "쓰담쓰담 최고예요!"],
-  hungry: () => ["배고파요… 간식 주세요~", "꼬르륵… 간식 시간 아니에요?", "간식… 간식…!"],
-  welcome: () => ["주인님 왔다!!", "기다렸어요! 왈왈!", "어디 갔다 왔어요~ 보고 싶었어요!"],
-  nap: () => ["주인님 어디 갔지… 기다리다 잘래요 zzz", "아무도 없네… 낮잠 자야지… zzz"],
+  idle: (n, o) => ["왈!", "놀아줘~", `${o} 뭐 해?`, `${n} 심심해~`, "나 여기 있어요!"],
+  walk: (n, o) => ["킁킁… 무슨 냄새지?", "산책 좋아~", "어디 가볼까?", "총총총~"],
+  run: (n, o) => ["우다다다!", "달려라~!"],
+  jump: (n, o) => ["왈왈!", "신난다!", "점프!"],
+  spin: (n, o) => ["빙글빙글~", "꼬리 잡기!"],
+  wag: (n, o) => ["꼬리 살랑살랑~", "헤헤", "기분 좋아!"],
+  sit: (n, o) => ["얌전히 앉았어요!", "착하지?", `${o} 구경 중~`],
+  sleep: (n, o) => ["졸려… zzz", "잠깐 낮잠…", "새근새근…"],
+  pet: (n, o) => ["헤헤 좋아!", `${o} 손 좋아요~`, "쓰담쓰담 더 해줘!", `${n} 기분 최고!`, `${o} 최고!`],
+  hover: (n, o) => ["헤헤 간지러워~", `킁킁, ${o} 손이다!`, "쓰담쓰담 해줄 거야?"],
+  drag: (n, o) => ["으앗! 높다~", "날 어디로 데려가?", "내려줘~ 멍!"],
+  land: (n, o) => ["휴~ 무사 착지!", `${o}, 다시 해줘요!`, "멍! 착지 성공!"],
+  wake: (n, o) => ["으응… 깼다!", "더 자고 싶은데…", `${o}이다!`],
+  come: (n, o) => ["왔어요! 불렀어요?", `${o}~ 나 왔어!`, "부르셨나요? 멍!"],
+  bow: (n, o) => ["놀자 놀자!", "기지개~ 쭈욱!", "같이 놀아요!"],
+  paw: (n, o) => ["손! 여기요~", "악수해요!"],
+  bang: (n, o) => ["으악! 당했다… 꼴깍", "빵! …(죽은 척 중)", "윽… 나 죽었어요… (실눈)"],
+  shy: (n, o) => ["부끄부끄~", "아잉 몰라요~ (얼굴 가림)", "보지 마세요… 부끄러워!"],
+  highfive: (n, o) => ["하이파이브! 짝!", "손바닥 짝! 왈!", "우리 최고!"],
+  beg: (n, o) => ["주세요~ 주세요~", "간식 하나만요… 네?", "두 발로 섰어요! 칭찬해 주세요!"],
+  belly: (n, o) => ["배 쓰담쓰담 해주세요~", "뒹굴뒹굴~ 기분 좋다!", "배 만져도 돼요! 헤헤"],
+  yawn: (n, o) => ["하아암~ 졸려…", "하품 나와요~", "아함… 조금 졸리다"],
+  zoomies: (n, o) => ["우다다다다!!", "갑자기 신난다!!", "달려라 뽀식이!!"],
+  chase: (n, o) => ["꼬리 잡을 거야!", "내 꼬리 어디 갔지?", "거기 서! 꼬리야!"],
+  peek: (n, o) => ["빼꼼!", "나 찾아봐라~", "여기 있지롱!"],
+  follow: (n, o) => [`${o} 어디 가요~`, "같이 가요!", `어? ${o} 손이다!`],
+  shake: (n, o) => ["부르르르~!", "몸 털기! 털털털~", "시원하다~!"],
+  sniff: (n, o) => ["킁킁… 무슨 냄새지?", "킁킁킁… 간식 냄새?", "여기 뭐가 있나?"],
+  hop: (n, o) => ["깡충깡충~", "토끼처럼 깡충!", "신난다 깡충!"],
+  roll: (n, o) => ["데굴데굴~", "굴러간다~!", "데굴데굴 데굴~"],
+  dance: (n, o) => ["♪ 뽀식이 댄스 타임! ♪", "♪ 둠칫둠칫 ♪", "♪ 신나는 춤! ♪"],
+  wave: (n, o) => ["안녕~! 안녕~!", `${o} 안녕~!`, "반가워요~!"],
+  doze: (n, o) => ["꾸벅… 꾸벅…", "졸려… 꾸벅…", "음냐음냐…"],
+  squat: (n, o) => ["운동 시작! 하나!", "튼튼해질 거예요! 하나!", "체조 시간! 하나!"],
+  yay: (n, o) => ["야호!! 신난다!!", "최고다~!!", "기분 최고!!"],
+  think: (n, o) => ["음… 간식 생각 중…", "음… 뭐 하고 놀까?", `흠… ${o} 생각 중…`],
+  kiss: (n, o) => ["쪽! 뽀뽀~ 💕", "쪽쪽! 사랑해요~", "뽀뽀 발사! 쪽!"],
+  surprise: (n, o) => ["왈?! 깜짝이야!", "헉! 뭐야 뭐야?!", "깜짝 놀랐잖아요!"],
+  stay: (n, o) => ["기다려… 꾹 참는 중…", "참을 수 있어… 기다려…"],
+  howl: (n, o) => ["아우우우~~ 🎶", "아우~ 뽀식이 노래 들어볼래요?", "랄라~ 아우우~"],
+  gift: (n, o) => ["선물이다?! 두근두근!", "뭐가 들었을까?!"],
+  bubbles: (n, o) => ["비눗방울이다! 잡을 거야!", "몽글몽글~ 잡아라!"],
+  photo: (n, o) => ["찰칵! 예쁘게 나왔어요?", "브이~! 찰칵!"],
+  bath: (n, o) => ["목욕…? 거품 보글보글~", "보글보글~ 목욕 시간!"],
+  birthday: (n, o) => ["생일 축하해요! 🎉", "축하 축하~! 🎂"],
+  rub: (n, o) => ["헤헤 간지러워~ 더 해줘!", "아~ 거기 거기!", "쓰담쓰담 최고예요!"],
+  hungry: (n, o) => [`${o}… 배고파요… 간식 주세요~`, "꼬르륵… 간식 시간 아니에요?", "간식… 간식…!"],
+  welcome: (n, o) => [`${o} 왔다!!`, `${o}! 기다렸어요! 왈왈!`, `어디 갔다 왔어요, ${o}~ 보고 싶었어요!`],
+  nap: (n, o) => [`${o} 어디 갔지… 기다리다 잘래요 zzz`, "아무도 없네… 낮잠 자야지… zzz"],
+  // 뽀식이 calls out to the owner now and then, by name.
+  call: (n, o) => [
+    `${o}~ 뭐 해요?`,
+    `${o}, 물 마셨어요? 💧`,
+    `${o}! 잠깐 기지개 켜요~`,
+    `${o} 최고! 💕`,
+    `${o}, 저랑 놀아요!`,
+    `${o}, 오늘 기분 어때요?`,
+    `${o}~ 눈 좀 쉬어요!`,
+    `${o}! 사랑해요~`,
+    `${o}, 힘내요! 제가 응원할게요!`,
+  ],
+  butterfly: (n, o) => ["나비다!! 잡을 거야!", "팔랑팔랑~ 거기 서!"],
+  snow: (n, o) => [`눈이다!! ${o}, 눈 와요!`, "하얀 눈이다~ 신난다!"],
+  rain: (n, o) => ["비 온다~ 우산 어디 있지?", "주룩주룩… 비 맞았어요!"],
+  star: (n, o) => ["별똥별이다! 소원 빌자!", "반짝! 별똥별이에요!"],
+  followme: (n, o) => [`${o} 따라갈게요~!`, "졸졸졸~ 따라간다!"],
+  tag: (n, o) => [`${o}, 나 잡아봐라~!`, "못 잡지롱~!"],
+  drink: (n, o) => ["할짝할짝… 시원하다!", "물 맛있다~ 💧"],
+  doorbell: (n, o) => ["왈왈! 누구세요?!", "딩동? 누가 왔다!"],
 }
 
 const RANDOM_ACTIONS = [
@@ -178,6 +198,10 @@ const RANDOM_ACTIONS = [
   ["howl", 1],
   ["bubbles", 2],
   ["photo", 1],
+  ["butterfly", 2],
+  ["star", 1],
+  ["drink", 2],
+  ["doorbell", 1],
   ["follow", 3],
   ["sleep", 3],
 ]
@@ -201,6 +225,7 @@ const DURATIONS = {
   yawn: [2200, 2600],
   shake: [1600, 1600],
   howl: [2600, 2600],
+  drink: [2600, 2600],
   think: [3200, 3200],
   chase: [2400, 2400],
   nap: [1e9, 1e9],
@@ -250,6 +275,9 @@ const S = {
   sprite: true,
   ownerName: "",
   lastFed: Date.now(),
+  game: null,
+  idleSeconds: 0,
+  nextCall: performance.now() + (3 + Math.random() * 3) * 60 * 1000,
   script: null, // a short sequence of steps (zoomies, peek…), see runScript()
   speed: 0,
   free: false, // may leave the screen (peeking from the edge)
@@ -275,8 +303,11 @@ window.__petState = () => ({
 
 const ground = () => S.H - S.h
 
+// What the dog calls the owner: their name with 님, or 주인님 until it knows it.
+const ownerLabel = () => (S.ownerName ? `${S.ownerName}님` : "주인님")
+
 function lineFor(key) {
-  return pick(LINES[key](S.name))
+  return pick(LINES[key](S.name, ownerLabel()))
 }
 
 // ---------- speech ----------
@@ -331,12 +362,13 @@ function goToBed(line) {
 function wakeUp() {
   cancelBed()
   if (S.action === "fall" || S.drag) return
-  doAction("bow", { line: pick(["잘 잤다~ 기지개 쭈욱!", "으응… 주인님 안녕!", "푹 잤어요! 놀아요!"]) })
+  doAction("bow", { line: pick(["잘 잤다~ 기지개 쭈욱!", `으응… ${ownerLabel()} 안녕!`, "푹 잤어요! 놀아요!"]) })
 }
 
 function doAction(a, opts = {}) {
   if (a !== "sleep") cancelBed()
   if (!opts.keepScript) S.script = null
+  if (!opts.keepGame) endGame()
   if (a !== "nap") S.napping = false
   S.speed = opts.speed || SPEED[a] || 330
   S.free = Boolean(opts.free)
@@ -362,12 +394,12 @@ function timeLine() {
   const h = now.getHours() + now.getMinutes() / 60
   if (performance.now() - S.lastStretch > 50 * 60 * 1000) {
     S.lastStretch = performance.now()
-    return "주인님 잠깐 쉬었다 해요~ 기지개 쭉!"
+    return `${ownerLabel()}, 잠깐 쉬었다 해요~ 기지개 쭉!`
   }
   if (Math.random() > 0.25) return null
-  if (h >= 6 && h < 10) return pick(["좋은 아침이에요!", "아침 먹었어요?"])
+  if (h >= 6 && h < 10) return pick([`좋은 아침이에요, ${ownerLabel()}!`, "아침 먹었어요?"])
   if (h >= 11.5 && h < 13.5) return pick(["점심시간이다! 밥 먹어요~", "나도 배고파…"])
-  if (h >= 23 || h < 5) return pick(["주인님 이제 자야지~", "늦었어요… 졸려…"])
+  if (h >= 23 || h < 5) return pick([`${ownerLabel()}, 이제 자야지~`, "늦었어요… 졸려…"])
   return null
 }
 
@@ -503,6 +535,94 @@ function startSquat(line) {
   ])
 }
 
+// ---------- games: butterfly chase, follow the cursor, tag ----------
+function startGame(kind, ms, line) {
+  removeItem()
+  endGame()
+  const g = { kind, until: performance.now() + ms, t0: performance.now() }
+  if (kind === "butterfly") {
+    g.el = document.createElement("span")
+    g.el.className = "fx butterfly"
+    g.el.textContent = "🦋"
+    fxEl.appendChild(g.el)
+    g.dir = S.x < span() / 2 ? 1 : -1
+    g.bx = S.x + S.w / 2 + g.dir * 120
+  }
+  doAction("wag", { line, duration: 1e9 })
+  S.game = g
+}
+
+function endGame() {
+  const g = S.game
+  if (!g) return
+  S.game = null
+  if (g.el) g.el.remove()
+}
+
+// Where the game wants the dog to go this frame (or null to stay put).
+function gameTarget(now, dt) {
+  const g = S.game
+  const t = (now - g.t0) / 1000
+  if (g.kind === "butterfly") {
+    g.bx += g.dir * 110 * dt
+    if (g.bx < 40 || g.bx > S.W - 40) g.dir = -g.dir
+    g.bx = clamp(g.bx, 40, S.W - 40)
+    const x = g.bx + Math.sin(t * 2.3) * 50
+    const y = S.H - S.h * 1.7 + Math.sin(t * 3.1) * 40
+    g.el.style.transform = `translate(${x}px, ${y}px) scaleX(${-g.dir})`
+    return x - S.w / 2
+  }
+  if (S.mouseX < 0) return null
+  if (g.kind === "followme") return S.mouseX - S.w / 2
+  // tag: run to the far side when the cursor comes close
+  return Math.abs(S.mouseX - (S.x + S.w / 2)) < 260 ? (S.mouseX < S.x + S.w / 2 ? span() : 0) : null
+}
+
+function tickGame(now, dt) {
+  const g = S.game
+  if (!g || S.drag || S.action === "fall") return
+  if (now > g.until) {
+    const kind = g.kind
+    endGame()
+    if (kind === "butterfly") doAction("jump", { line: pick(["놓쳤다~ 나비야 또 와!", "팔랑팔랑… 날아갔다~"]) })
+    else if (kind === "followme") doAction("sit", { line: `헤헤 잘 따라갔죠, ${ownerLabel()}?` })
+    else doAction("belly", { line: "헥헥… 잡혔다! 항복~" })
+    return
+  }
+  const tx = gameTarget(now, dt)
+  if (tx === null) return
+  const target = clamp(tx, 0, span())
+  if (S.action !== "run") {
+    if (Math.abs(target - S.x) > 40) doAction("run", { keepGame: true, targetX: target, speed: g.kind === "followme" ? 260 : 340 })
+  } else S.targetX = target
+}
+
+// Snow or rain falling over the whole screen.
+function weather(char, n, cls, ms) {
+  for (let i = 0; i < n; i++) {
+    const el = document.createElement("span")
+    el.className = `fx ${cls}`
+    el.textContent = char
+    el.style.left = `${Math.random() * S.W}px`
+    el.style.top = "-30px"
+    el.style.animationDelay = `${Math.random() * (ms - 1500)}ms`
+    el.style.setProperty("--fall", `${S.H + 40}px`)
+    fxEl.appendChild(el)
+    setTimeout(() => el.remove(), ms + 1500)
+  }
+}
+
+function shootingStar() {
+  const el = document.createElement("span")
+  el.className = "fx shooting-star"
+  el.textContent = "🌠"
+  el.style.setProperty("--dx", `${S.W * 0.6}px`)
+  el.style.left = `${S.W * 0.15}px`
+  el.style.top = `${S.H * 0.08}px`
+  fxEl.appendChild(el)
+  setTimeout(() => el.remove(), 2200)
+}
+
 // Soap bubbles drifting up around the dog.
 function spawnBubbles(n) {
   for (let i = 0; i < n; i++) {
@@ -565,6 +685,44 @@ const SPECIAL = {
     doAction("howl", { line: line || lineFor("howl") })
   },
   gift: () => dropItem("gift"),
+  butterfly: (line) => startGame("butterfly", 7000, line || lineFor("butterfly")),
+  followme: (line) => startGame("followme", 10000, line || lineFor("followme")),
+  tag: (line) => startGame("tag", 8000, line || lineFor("tag")),
+  snow: (line) => {
+    weather("❄️", 45, "snowfall", 7000)
+    runScript([
+      { a: "jump", d: 1400, line: line || lineFor("snow") },
+      { a: "hop", x: randomWalkX() },
+      { a: "jump", d: 1400, line: "눈사람 만들고 싶다~ ☃️" },
+    ])
+  },
+  rain: (line) => {
+    weather("💧", 60, "rainfall", 5000)
+    runScript([
+      { a: "sit", d: 2400, line: line || lineFor("rain") },
+      { a: "shake", d: 1600, line: "부르르르~! 다 젖었다!" },
+      { a: "bow", d: 1600, line: "그래도 비 오는 날 좋아요~" },
+    ])
+  },
+  star: (line) => {
+    shootingStar()
+    runScript([
+      { a: "sit", d: 2400, face: 1, line: line || lineFor("star") },
+      { a: "shy", d: 2000, line: `소원은… ${ownerLabel()}랑 계속 노는 거! ✨` },
+    ])
+  },
+  drink: (line) => {
+    spawnFx(["💧"], 4)
+    doAction("drink", { line: line || lineFor("drink") })
+  },
+  doorbell: (line) => {
+    spawnFx(["❗", "🔔"], 3)
+    runScript([
+      { a: "run", x: span(), speed: 450, line: line || lineFor("doorbell") },
+      { a: "jump", d: 1400, line: "왈왈왈! 누구세요?!" },
+      { a: "sit", d: 2000, line: `택배인가 봐요, ${ownerLabel()}! 📦` },
+    ])
+  },
   bubbles: (line) => {
     spawnBubbles(10)
     runScript([
@@ -648,6 +806,7 @@ function arrive() {
     return
   }
   if (S.script && nextStep()) return
+  if (S.game) return doAction("wag", { keepGame: true, duration: 1e9 })
   doAction("idle", { duration: 1500 })
 }
 
@@ -780,7 +939,7 @@ window.addEventListener("mousemove", (e) => {
   setIgnore(!over)
   const now = performance.now()
   if (over) trackRub(e.clientX, now)
-  else if (["idle", "sit", "wag"].includes(S.action) && !S.script && now > S.nextLook) {
+  else if (["idle", "sit", "wag"].includes(S.action) && !S.script && !S.game && now > S.nextLook) {
     // Notice the cursor nearby: look at it, and sometimes trot over.
     const dx = e.clientX - (S.x + S.w / 2)
     if (Math.abs(dx) < 260 && Math.abs(e.clientY - (S.y + S.h / 2)) < 260) {
@@ -983,6 +1142,7 @@ window.pet.onSettings(applySettings)
 window.pet.onIdle((seconds) => handleIdle(seconds))
 window.__idle = (seconds) => handleIdle(seconds) // used by the smoke test
 function handleIdle(seconds) {
+  S.idleSeconds = seconds
   if (S.drag || S.action === "fall") return
   if (seconds >= 300 && !S.napping && !["sleep", "nap"].includes(S.action)) {
     removeItem()
@@ -994,6 +1154,22 @@ function handleIdle(seconds) {
     doAction("jump", { line: lineFor("welcome") })
   }
 }
+
+// ---------- 뽀식이 calls the owner by name now and then ----------
+function callOwner() {
+  if (S.drag || S.game || S.script || S.napping || ["sleep", "nap", "fall"].includes(S.action)) return false
+  const line = lineFor("call")
+  if (line.includes("💕") || line.includes("사랑")) burstHearts()
+  doAction(pick(["wag", "jump", "sit", "paw"]), { line })
+  return true
+}
+window.__callOwner = callOwner // used by the smoke test
+setInterval(() => {
+  const now = performance.now()
+  // Only while the owner is at the computer (keyboard or mouse used in the last minute).
+  if (now < S.nextCall || S.idleSeconds > 60) return
+  if (callOwner()) S.nextCall = now + (15 + Math.random() * 10) * 60 * 1000
+}, 20000)
 
 // ---------- hourly chime ----------
 const CHIME = {
@@ -1011,7 +1187,7 @@ setInterval(() => {
   if (S.drag || S.napping || ["sleep", "nap", "fall"].includes(S.action)) return
   const ap = h < 12 ? "오전" : "오후"
   const extra = CHIME[h] || pick(["물 한 잔 마셔요~", "눈 좀 쉬어요~", "기지개 한 번 쭉!"])
-  doAction("sit", { line: `${ap} ${h % 12 || 12}시예요! ${extra}`, duration: 4000 })
+  doAction("sit", { line: `${ownerLabel()}, ${ap} ${h % 12 || 12}시예요! ${extra}`, duration: 4000 })
 }, 15000)
 
 // ---------- main loop ----------
@@ -1056,7 +1232,7 @@ function loop(now) {
         let line
         if (!S.greeted) {
           S.greeted = true
-          line = `왈! ${S.name} 왔어요!`
+          line = S.ownerName ? `왈! ${ownerLabel()}! ${S.name} 왔어요!` : `왈! ${S.name} 왔어요!`
         } else if (Math.random() < 0.5) line = lineFor("land")
         doAction("land", { line })
       }
@@ -1064,6 +1240,7 @@ function loop(now) {
   } else {
     // Keep the dog standing on the floor (e.g. after the screen size changed).
     S.y = ground()
+    if (S.game) tickGame(now, dt)
     if (a === "fetch" && S.item) S.targetX = clamp(S.item.x - S.w / 2, 0, Math.max(0, S.W - S.w))
     const moving = MOVING.has(a)
     if (moving && S.targetX !== null) {

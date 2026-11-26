@@ -48,6 +48,14 @@ const RULES = [
   { test: /(몸\s*털|부르르|털어)/, reply: () => ({ text: "부르르르~! 몸 털기!", action: "shake" }) },
   { test: /(킁킁|냄새)/, reply: () => ({ text: "킁킁… 어디서 맛있는 냄새가…?", action: "sniff" }) },
   { test: /(깡충|토끼)/, reply: () => ({ text: "깡충깡충~ 토끼처럼!", action: "hop" }) },
+  { test: /(나비)/, reply: () => ({ text: "나비다!! 잡을 거야!", action: "butterfly" }) },
+  { test: /(눈\s*(와|온|오|내려)|첫눈|눈사람)/, reply: (ctx) => ({ text: `눈이다!! ${owner(ctx)}, 눈 와요!`, action: "snow" }) },
+  { test: /(비\s*(와|온|오|내려)|비가|우산)/, reply: () => ({ text: "비 온다~ 주룩주룩!", action: "rain" }) },
+  { test: /(별똥별|소원|별\s*보)/, reply: () => ({ text: "별똥별이다! 소원 빌자! ✨", action: "star" }) },
+  { test: /(따라\s*와|따라\s*다녀)/, reply: (ctx) => ({ text: `${owner(ctx)} 따라갈게요~!`, action: "followme" }) },
+  { test: /(잡아\s*봐|도망|술래)/, reply: () => ({ text: "나 잡아봐라~! 못 잡지롱~", action: "tag" }) },
+  { test: /(물\s*(마셔|마시|줘|먹)|목말라)/, reply: () => ({ text: "할짝할짝… 시원하다! 💧", action: "drink" }) },
+  { test: /(택배|딩동|초인종|누구\s*세요)/, reply: () => ({ text: "왈왈! 누구세요?!", action: "doorbell" }) },
   { test: /(생일)/, reply: (ctx) => ({ text: `생일 축하해요, ${owner(ctx)}! 🎉 축하 댄스!`, action: "birthday" }) },
   { test: /(목욕|씻자|샤워)/, reply: () => ({ text: "목욕…? 거품 보글보글~", action: "bath" }) },
   { test: /(사진|셀카|찰칵)/, reply: () => ({ text: "찰칵! 예쁘게 나왔어요?", action: "photo" }) },
@@ -106,7 +114,7 @@ const RULES = [
       return { text: `오늘은 ${t.month}월 ${t.date}일 ${"일월화수목금토"[t.day]}요일이에요!`, action: "sit" }
     },
   },
-  { test: /(날씨|비\s*와|더워|추워)/, reply: () => ({ text: "창밖은 못 보지만… 따뜻하게 입어요! 저처럼 스웨터!", action: "spin" }) },
+  { test: /(날씨|더워|추워)/, reply: () => ({ text: "창밖은 못 보지만… 따뜻하게 입어요! 저처럼 스웨터!", action: "spin" }) },
 
   {
     test: /(안녕|하이|hello|hi\b|반가)/i,
@@ -126,7 +134,8 @@ export const SUGGESTIONS = [
   "안녕!", "앉아", "빵!", "얼굴!", "우다다", "숨바꼭질", "춤춰", "데굴데굴", "간식 줄까?", "사랑해",
   "손", "하이파이브", "애교 부려봐", "뒹굴", "꼬리 잡기", "몸 털어", "킁킁", "깡충깡충", "인사해",
   "운동하자", "하품", "야호!", "생각 중?", "뽀뽀", "깜짝!", "기다려", "노래해", "선물", "비눗방울",
-  "사진 찍자", "목욕하자", "생일 축하해", "산책 가자", "이리 와", "잘 자",
+  "사진 찍자", "목욕하자", "생일 축하해", "나비다!", "눈 와", "비 와", "별똥별", "따라와", "잡아봐",
+  "물 마셔", "딩동!", "내 이름 불러줘", "산책 가자", "이리 와", "잘 자",
 ]
 
 // The KakaoTalk bot shows one picture per answer. Actions without a picture of their own borrow one.
@@ -159,6 +168,14 @@ export const PICTURE_FOR_ACTION = {
   photo: "highfive",
   bath: "front",
   birthday: "highfive",
+  butterfly: "jump",
+  snow: "jump",
+  rain: "front",
+  star: "sit",
+  followme: "run",
+  tag: "run",
+  drink: "eat",
+  doorbell: "jump",
 }
 
 const FALLBACK = [

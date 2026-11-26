@@ -72,6 +72,12 @@ html, body {
 .item-bone, .item-gift { font-size: 34px; line-height: 1; }
 .bubble { font-size: 26px; opacity: .85; animation: bubble-float 3.6s ease-in forwards; }
 @keyframes bubble-float { 0% { transform: translate(0, 0) scale(.6); opacity: 0 } 15% { opacity: .9 } 100% { transform: translate(20px, -260px) scale(1.1); opacity: 0 } }
+.butterfly { font-size: 28px; left: 0; top: 0; }
+.snowfall, .rainfall { font-size: 18px; opacity: 0; animation: fall-down 3s linear forwards; }
+.rainfall { font-size: 14px; animation-duration: 1.1s; }
+@keyframes fall-down { 0% { opacity: 0; transform: translateY(0) } 8% { opacity: .9 } 100% { opacity: .9; transform: translateY(var(--fall, 900px)) } }
+.shooting-star { font-size: 34px; opacity: 0; animation: shoot 1.8s ease-in forwards; }
+@keyframes shoot { 0% { opacity: 0; transform: translate(0, 0) } 15% { opacity: 1 } 100% { opacity: 0; transform: translate(var(--dx, 600px), 160px) } }
 .flash { position: fixed; inset: 0; background: #fff; pointer-events: none; animation: flash .6s ease-out forwards; }
 @keyframes flash { from { opacity: .85 } to { opacity: 0 } }
 .item-ball {
@@ -161,3 +167,4 @@ html, body {
 @keyframes sprite-howl { 0%,100% { transform: rotate(-4deg) } 50% { transform: rotate(-9deg) translateY(-3px) } }
 #pet.sprite .dog-howl { animation: sprite-howl 1.1s ease-in-out infinite }
 #pet.sprite .dog-think { animation: sprite-breathe 2.4s ease-in-out infinite }
+#pet.sprite .dog-drink { animation: sprite-nod .35s ease-in-out infinite }
